@@ -10,7 +10,7 @@ public class NotificationsViewModel extends ViewModel {
 
     public NotificationsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("Tento fragment slouží pro zobrazení náhodného citátu");
     }
 
     public LiveData<String> getText() {

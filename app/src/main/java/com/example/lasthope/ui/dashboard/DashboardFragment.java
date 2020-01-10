@@ -1,6 +1,7 @@
 package com.example.lasthope.ui.dashboard;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,12 +51,13 @@ public class DashboardFragment extends Fragment {
                 ViewModelProviders.of(this).get(DashboardViewModel.class);
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
-
+        textView.setTextColor(Color.rgb(0,0,0));
         datum= root.findViewById(R.id.txtDatum);
         txtJmeno1 = root.findViewById(R.id.txtJmeno1);
         txtJmeno2 = root.findViewById(R.id.txtJmeno2);
         Date date = new Date();
         datum.setText("Dnes je : "+new SimpleDateFormat("\tMM/DD/YY").format(date).toString());
+        datum.setTextColor(Color.rgb(0,0,0));
         mQueue = MyRequestQueue.getInstance(getActivity().getApplicationContext());
 
 
@@ -97,13 +99,42 @@ zistiSvatek();
         Log.v("MYAPP", datum2);
 
         String url ="http://svatky.adresa.info/json?date="+datum1;
-
+        String ur2 ="http://svatky.adresa.info/json?date="+datum2;
 
 
         Log.v("MYAPP", url);
 
         final JsonArrayRequest jsonObjReq1 = new
-                JsonArrayRequest(Request.Method.GET, url, null,
+            JsonArrayRequest(Request.Method.GET, url, null,
+            new com.android.volley.Response.Listener<JSONArray>() {
+
+                @Override
+                public void onResponse(JSONArray response) {
+
+
+                    JSONObject jresponse = null;
+                    try {
+                        jresponse = response.getJSONObject(0);
+
+                        String nickname = jresponse.getString("name");
+                        Log.d("MYAPP",nickname);
+                        txtJmeno1.setText("Dneska má svátek  "+nickname);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+        }
+    });
+
+// Add the request to the RequestQueue.
+        mQueue.add(jsonObjReq1);
+        final JsonArrayRequest jsonObjReq2 = new
+                JsonArrayRequest(Request.Method.GET, ur2, null,
                 new com.android.volley.Response.Listener<JSONArray>() {
 
                     @Override
@@ -116,34 +147,22 @@ zistiSvatek();
 
                             String nickname = jresponse.getString("name");
                             Log.d("MYAPP",nickname);
-                            txtJmeno1.setText("Dneska má svátek  "+nickname);
+                            txtJmeno2.setText("Zítra má svátek  "+nickname);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
 
-                        SharedPreferences settings = getActivity().getSharedPreferences("settingsSave", 0);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("ipadresa", "123.121.121.3").commit();
 
-
-                        // Nacitani adresy ulozene v pameti
-                        SharedPreferences settings2 = getActivity().getSharedPreferences("settingsSave", 0);
-                        String silent = settings2.getString("ipadresa","192.168.1.1");
-
-
-
-
-                        // txtJmeno1.setText(data);
 
                     }
                 }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
 
 // Add the request to the RequestQueue.
-        mQueue.add(jsonObjReq1);
+        mQueue.add(jsonObjReq2);
     }
 }

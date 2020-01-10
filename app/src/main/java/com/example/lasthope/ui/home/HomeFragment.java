@@ -40,14 +40,7 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mQueue = MyRequestQueue.getInstance(getActivity().getApplicationContext());
 
-        /*
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
+
 
         final TextView lblResult = root.findViewById(R.id.txtOutput);
         homeViewModel.getTranslationResult().observe(this, new Observer<String>() {
