@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LastHope</string>
+    <string name="title_home">Prekladač</string>
+    <string name="title_dashboard">Svátky</string>
+    <string name="title_notifications">Citáty</string>
+    <string name="texttrans">Text pro překlad</string>
+
+    <color name="blue">#FFFFFF</color>
+</resources>
